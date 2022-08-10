@@ -93,12 +93,12 @@ import { defineComponent, ref, onMounted } from "vue"
 
 export default defineComponent({
   setup () {
-    const editor = ref(null)
-    const htmlBox = ref(null)
-    const imgSelector = ref(null)
+    const editor = ref()
+    const htmlBox = ref()
+    const imgSelector = ref()
     onMounted(() => {
     //   DOM 요소는 초기 렌더링 후에 ref에 할당합니다.
-    //   console.log(imgSelector.value)
+      console.log(imgSelector.value)
     })
 
     const setStyle = (style) => {
@@ -122,7 +122,9 @@ export default defineComponent({
     }
 
     const selectImageListener = (event: Event) => {
-      const files: Array = event.target.files
+      if (event === null) return
+      else if (event.target === null) return
+      const files: File[] = (event.target as HTMLInputElement).files
       if (files) {
         insertImageDate(files[0])
       }
@@ -130,7 +132,7 @@ export default defineComponent({
 
     const insertImageDate = (file: File) => {
       const reader = new FileReader()
-      reader.addEventListener("load", function (e) {
+      reader.addEventListener("load", function () {
         focusEditor()
         document.execCommand("insertImage", false, `${reader.result}`)
       })
